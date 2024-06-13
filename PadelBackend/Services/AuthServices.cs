@@ -18,6 +18,7 @@ namespace PadelBackend.Services
         {
             var claims = new ClaimsIdentity();
             claims.AddClaim(new Claim("id", user.Id.ToString()));
+            claims.AddClaim(new Claim("username", user.UserName.ToString()));
             // En primera instancia no usaremos roles de usuario
             //if (user.Roles != null)
             //{

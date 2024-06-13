@@ -5,7 +5,7 @@ using PadelBackend.Services;
 namespace PadelBackend.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
 
