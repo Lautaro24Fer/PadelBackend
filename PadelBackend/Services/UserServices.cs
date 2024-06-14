@@ -6,6 +6,7 @@ using PadelBackend.Models.User.Dto;
 using PadelBackend.Repositories;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 
 namespace PadelBackend.Services
@@ -15,6 +16,7 @@ namespace PadelBackend.Services
         public Task<List<UsersDto>> GetManyUsers();
         public Task<UserDto> GetOneUser(int id);
         public Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input);
+        public Task<LoginValidationDto> ValidateCredentials(Login login);
 
     }
     public class UserServices : IUsersServices
@@ -22,12 +24,14 @@ namespace PadelBackend.Services
         private readonly IUserRepository userRepo;
         private readonly IMapper mapper;
         private readonly IAuthServices authServices;
+        private readonly IEncoderService encoderService;
 
-        public UserServices(IUserRepository userRepo, IMapper mapper, IAuthServices authServices)
+        public UserServices(IUserRepository userRepo, IMapper mapper, IAuthServices authServices, IEncoderService encoderService)
         {
             this.userRepo = userRepo;
             this.mapper = mapper;
             this.authServices = authServices;
+            this.encoderService = encoderService;
         }
 
         public async Task<List<UsersDto>> GetManyUsers()
@@ -48,14 +52,16 @@ namespace PadelBackend.Services
 
             if (input.Contains('@'))
             {
-                if (!authServices.IsValidAddress(input))
+                if (!IsValidAddress(input))
                 {
+                    userStatus.Status = false;
                     userStatus.Message = "The email address has not the correct format";
                     return userStatus;
                 }
                 var userByEmail = await userRepo.GetOne(u => u.Email == input);
                 if (userByEmail == null)
                 {
+                    userStatus.Status = false;
                     userStatus.Message = $"No user founded with de email {input}";
                     return userStatus;
                 }
@@ -63,17 +69,54 @@ namespace PadelBackend.Services
                 userStatus.User = userByEmail;
                 return userStatus;
             }
-            if (!authServices.IsValidUserNameFormat(input))
+            if (!IsValidUserNameFormat(input))
             {
                 userStatus.Message = "Username invalid";
                 return userStatus;
             }
             var userByUserName = await userRepo.GetOne(u => u.UserName == input);
+            if(userByUserName == null)
+            {
+                userStatus.Status = false;
+                userStatus.Message = "User by username not founded";
+                userStatus.User = userByUserName;
+                return userStatus;
+            }
             userStatus.Status = true;
+            userStatus.Message = "UserName valid founded";
             userStatus.User = userByUserName;
             return userStatus;
         }
+        public async Task<LoginValidationDto> ValidateCredentials(Login login)
+        {
 
-        
+            var user = await GetOneUserByUserNameOrEmail(login.UsernameOrMailAddress);
+            if (!user.Status)
+            {
+                throw new Exception(user.Message);
+            }
+
+            string userHashPassword = user.User.Password;
+            if (!encoderService.Verify(login.Password, userHashPassword))
+            {
+                user.Status = false;
+                user.Message = "The credentials do not match";
+                return user;
+            }
+            return user;
+        }
+
+        public bool IsValidAddress(string input)
+        {
+            var emailAttribute = new EmailAddressAttribute();
+            return emailAttribute.IsValid(input);
+        }
+
+        public bool IsValidUserNameFormat(string input)
+        {
+            string usernamePattern = @"^[a-z0-9_]+$";
+            return Regex.IsMatch(input, usernamePattern);
+        }
+
     }
 }

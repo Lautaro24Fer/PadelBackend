@@ -37,7 +37,7 @@ namespace PadelBackend.Controllers
             }
             try
             {
-                var userstate = await authServices.ValidateCredentials(logindata);
+                var userstate = await usersServices.ValidateCredentials(logindata);
                 if (userstate.Status)
                 {
                     return BadRequest(new {message = "Credentials do not match" });
