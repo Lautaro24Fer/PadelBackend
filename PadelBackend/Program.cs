@@ -39,6 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddScoped<AuthServices>();
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<EncoderService>();
+
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

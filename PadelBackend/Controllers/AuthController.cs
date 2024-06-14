@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PadelBackend.Models.Auth;
 using PadelBackend.Models.Auth.Dto;
+using PadelBackend.Models.User;
 using PadelBackend.Models.User.Dto;
+using PadelBackend.Services;
 using System.Web.Http.Description;
 
 namespace PadelBackend.Controllers
@@ -12,28 +15,48 @@ namespace PadelBackend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMapper mapper;
+        private readonly IUsersServices usersServices;
+        private readonly IAuthServices authServices;
 
-        public AuthController(IMapper mapper)
+        public AuthController(IMapper mapper, IUsersServices usersServices, IAuthServices authServices)
         {
             this.mapper = mapper;
+            this.usersServices = usersServices;
+            this.authServices = authServices;
         }
 
-        // Se comenta para evitar el error por no retornar nada
 
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public Task<ActionResult<LoginResponseDto>> Login([FromBody] Login logindata)
-        //{
-        //   /*
-        //    Hay que verificar si el texto de entrada es el nombre de usuario o 
-        //   la direccion de correo. Luego verficar si esta dentro de la base de datos para 
-        //   luego ahi verificar si coincide con la contraseña dada.
-        //   Una vez las credenciales son verificadas con exito se retorna el token creado mediante
-        //   la funcion dentro del servicio de auth, para despues mediante este hacer 
-        //   peticiones a paginas con encabezado AUTHORIZE.
-        //   IMP: Hay que hacere el filtro de autorizaciones dentro del config
-        //    */
-        //}
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] Login logindata)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var userstate = await authServices.ValidateCredentials(logindata);
+                if (userstate.Status)
+                {
+                    return BadRequest(new {message = "Credentials do not match" });
+                }
+
+                var token = authServices.GenerateJwtToken(userstate.User);
+
+                return Ok(new LoginResponseDto
+                {
+                    Token = token,
+                    User = mapper.Map<UserLoginResponseDto>(userstate.User)
+                });
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new {message = ex.Message});
+            }
+            
+        }
     }
 }
