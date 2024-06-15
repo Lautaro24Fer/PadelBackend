@@ -12,6 +12,8 @@ namespace PadelBackend.Config
         {
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UsersDto>().ReverseMap();
+            CreateMap<User, CreateUserDto>().ReverseMap();
+            CreateMap<User, UserLoginResponseDto>().ReverseMap();
             CreateMap<User, Login>().ReverseMap();
             CreateMap<User, LoginValidationDto>().ReverseMap();
             CreateMap<User, UserValidationDataDto>().ReverseMap();

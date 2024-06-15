@@ -31,7 +31,7 @@ namespace PadelBackend.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,20 +49,13 @@ namespace PadelBackend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "Lautaro@gmail.com",
-                            Name = "Lautaro Fernandez",
-                            Password = "12345678",
-                            UserName = "lauta_ro"
-                        });
                 });
 #pragma warning restore 612, 618
         }

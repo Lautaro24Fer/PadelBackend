@@ -8,6 +8,8 @@ namespace PadelBackend.Repositories
     {
         public Task<List<T>> Get(Expression<Func<T, bool>>? filter = null);
         public Task<T> GetOne(Expression<Func<T, bool>>? filter = null);
+        public Task CreateOne(T entity);
+        public Task Save();
     }
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -19,6 +21,12 @@ namespace PadelBackend.Repositories
         {
             _db = db;
             dbSet = _db.Set<T>();
+        }
+
+        public async Task CreateOne(T entity)
+        {
+            await dbSet.AddAsync(entity);
+            await Save();
         }
 
         public async Task<List<T>> Get(Expression<Func<T, bool>>? filter = null)
@@ -38,6 +46,11 @@ namespace PadelBackend.Repositories
                 query = query.Where(filter);
             }
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task Save()
+        {
+            await _db.SaveChangesAsync();
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PadelBackend.Models.User
+namespace PadelBackend.Models.User.Dto
 {
-    public class User
+    public class CreateUserDto
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Required]
         [MaxLength(100)]
         public string Name { get; set; } = null!;

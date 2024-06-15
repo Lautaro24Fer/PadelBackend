@@ -5,7 +5,7 @@
 namespace PadelBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class updb : Migration
+    public partial class dbup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace PadelBackend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -26,10 +26,11 @@ namespace PadelBackend.Migrations
                     table.PrimaryKey("PK_User", x => x.Id);
                 });
 
-            migrationBuilder.InsertData(
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
                 table: "User",
-                columns: new[] { "Id", "Email", "Name", "Password", "UserName" },
-                values: new object[] { 1, "Lautaro@gmail.com", "Lautaro Fernandez", "12345678", "lauta_ro" });
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_UserName",

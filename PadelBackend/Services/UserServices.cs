@@ -17,20 +17,18 @@ namespace PadelBackend.Services
         public Task<UserDto> GetOneUser(int id);
         public Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input);
         public Task<LoginValidationDto> ValidateCredentials(Login login);
-
+        public Task<UserDto> CreateOneUser(CreateUserDto createUser);
     }
     public class UserServices : IUsersServices
     {
         private readonly IUserRepository userRepo;
         private readonly IMapper mapper;
-        private readonly IAuthServices authServices;
         private readonly IEncoderService encoderService;
 
-        public UserServices(IUserRepository userRepo, IMapper mapper, IAuthServices authServices, IEncoderService encoderService)
+        public UserServices(IUserRepository userRepo, IMapper mapper, IEncoderService encoderService)
         {
             this.userRepo = userRepo;
             this.mapper = mapper;
-            this.authServices = authServices;
             this.encoderService = encoderService;
         }
 
@@ -43,6 +41,25 @@ namespace PadelBackend.Services
         {
             var user = await userRepo.GetOne(u => u.Id == id);
             return mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> CreateOneUser(CreateUserDto createUser)
+        {
+            // validacion si el correo o el nombre de usuario unicos ya estan en el sistema
+            var validUserName = await GetOneUserByUserNameOrEmail(createUser.UserName);
+            var validEmail = await GetOneUserByUserNameOrEmail(createUser.Email);
+            if(validUserName.Status)
+            {
+                throw new Exception($"The username '{createUser.UserName}' is currently in use");
+            }
+            if (validEmail.Status)
+            {
+                throw new Exception($"The email '{createUser.Email}' is currently in use");
+            }
+            var createUserMapped = mapper.Map<User>(createUser);
+            createUserMapped.Password = encoderService.Encode(createUserMapped.Password);
+            await userRepo.CreateOne(createUserMapped);
+            return mapper.Map<UserDto>(createUserMapped);
         }
 
         public async Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input)
@@ -97,6 +114,7 @@ namespace PadelBackend.Services
             }
 
             string userHashPassword = user.User.Password;
+            string loginPassword = login.Password;
             if (!encoderService.Verify(login.Password, userHashPassword))
             {
                 user.Status = false;

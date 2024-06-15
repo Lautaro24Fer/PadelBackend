@@ -9,9 +9,9 @@ namespace PadelBackend.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly UserServices userServices;
+        private readonly IUsersServices userServices;
 
-        public UserController(UserServices userServices)
+        public UserController(IUsersServices userServices)
         {
             this.userServices = userServices;
         }
@@ -49,6 +49,24 @@ namespace PadelBackend.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserDto>> Post(CreateUserDto createUser)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return Ok(await userServices.CreateOneUser(createUser));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = ex.Message});
             }
         }
     }   

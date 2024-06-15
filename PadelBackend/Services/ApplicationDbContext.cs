@@ -10,10 +10,7 @@ namespace PadelBackend.Services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasIndex(u => u.UserName).IsUnique();
-
-            modelBuilder.Entity<User>().HasData(
-                new User { Email = "Lautaro@gmail.com", Id = 1, Name = "Lautaro Fernandez", Password = "12345678", UserName = "lauta_ro"}
-                );
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         }
     }
 }
