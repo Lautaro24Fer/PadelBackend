@@ -45,6 +45,11 @@ namespace PadelBackend.Services
 
         public async Task<UserDto> CreateOneUser(CreateUserDto createUser)
         {
+            createUser.UserName = createUser.UserName.Trim();
+            if (!IsValidUserNameFormat(createUser.UserName))
+            {
+                throw new Exception($"The username format can only have a-z letters or _ and not start with numbers");
+            }
             // validacion si el correo o el nombre de usuario unicos ya estan en el sistema
             var validUserName = await GetOneUserByUserNameOrEmail(createUser.UserName);
             var validEmail = await GetOneUserByUserNameOrEmail(createUser.Email);
@@ -132,7 +137,7 @@ namespace PadelBackend.Services
 
         public bool IsValidUserNameFormat(string input)
         {
-            string usernamePattern = @"^[a-z0-9_]+$";
+            string usernamePattern = @"^[a-zA-Z][a-zA-Z0-9_]*$";
             return Regex.IsMatch(input, usernamePattern);
         }
 
