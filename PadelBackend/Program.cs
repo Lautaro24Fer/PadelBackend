@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PadelBackend.Repositories;
 using AutoMapper;
 using PadelBackend.Config;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( options => 
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ToDo API",
+        Description = "An ASP.NET Core Web API for managing todos",
+    });
+    options.AddSecurityDefinition("Token", new OpenApiSecurityScheme()
+    {
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme.",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Name = "Authorization",
+        Scheme = "bearer"
+    });
+    options.OperationFilter<AuthOperationsFilter>();
+});
 
 // secret key
 var secretKey = builder.Configuration.GetSection("JwtSettings").GetSection("SecretKey").ToString();
