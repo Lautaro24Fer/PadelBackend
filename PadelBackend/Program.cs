@@ -59,9 +59,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IUsersServices, UserServices>();
 builder.Services.AddScoped<IEncoderService, EncoderService>();
+builder.Services.AddScoped<IRacketServices, RacketServices>();
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRacketRepository, RacketRepository>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
