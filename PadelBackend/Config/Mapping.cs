@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using PadelBackend.Models.User.Dto;
-using PadelBackend.Models.User;
-using PadelBackend.Models.Auth;
-using PadelBackend.Models.Auth.Dto;
+﻿using PadelBackend.Models.Racket;
+using PadelBackend.Models.Racket.Dto;
 
 namespace PadelBackend.Config
 {
