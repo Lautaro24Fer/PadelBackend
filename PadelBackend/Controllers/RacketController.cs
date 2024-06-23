@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PadelBackend.Exceptions;
 using PadelBackend.Models.Racket.Dto;
 using PadelBackend.Services;
@@ -45,11 +46,31 @@ namespace PadelBackend.Controllers
             }
             catch(NotFoundCustomEx ex)
             {
-                return NotFound(new {message = ex.Message ?? $"Racket with id {id} not founded"});
+                return NotFound(new {message = ex.errorMessageDetails ?? $"Racket with id {id} not founded"});
             }
             catch(Exception ex)
             {
                 return BadRequest(new {message = ex.Message});
+            }
+        }
+        [HttpPost]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<RacketDto>> Post(CreateRacketDto createRacket)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var createResponse = await racketServices.CreateRacket(createRacket);
+                return Ok(new { body = createResponse, wasCreated = true });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message, wasCreated = false});
             }
         }
     }

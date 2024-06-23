@@ -13,7 +13,7 @@ namespace PadelBackend.Models.Racket.Dto
         [MaxLength(20)]
         public float Price { get; set; }
         [Required]
-        public RacketCategory Category { get; set; }
+        public string Category { get; set; } = null!;
         [Required]
         public string Image { get; set; } = null!;
     }

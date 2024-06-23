@@ -4,13 +4,14 @@ using PadelBackend.Repositories;
 using PadelBackend.Exceptions;
 using System.Net;
 using System.Web.Http;
+using PadelBackend.Models.Racket;
 
 namespace PadelBackend.Services
 {
 
     public interface IRacketServices
     {
-        public Task<RacketDto> CreateRacket(); 
+        public Task<RacketDto> CreateRacket(CreateRacketDto createRacket); 
         public Task DeleteRacket();
         public Task<RacketDto> UpdateRacket();
         public Task<RacketDto> GetOneRacket(int id);
@@ -28,9 +29,17 @@ namespace PadelBackend.Services
             this.mapper = mapper;
         }
 
-        public Task<RacketDto> CreateRacket()
+        public async Task<RacketDto> CreateRacket(CreateRacketDto createRacket)
         {
-            throw new NotImplementedException();
+            // validacion de la categoria
+            
+            if (!RacketCategories.categories.Contains(createRacket.Category.ToLower()))
+            {
+                throw new Exception($"The category '{createRacket.Category}' does not exist");
+            }
+            var racketMapped = mapper.Map<Racket>(createRacket);
+            await racketRepository.CreateOne(racketMapped);
+            return mapper.Map<RacketDto>(racketMapped);
         }
         public Task DeleteRacket()
         {

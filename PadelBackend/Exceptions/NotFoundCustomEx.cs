@@ -2,6 +2,7 @@
 {
     public class NotFoundCustomEx : Exception
     {
-        public NotFoundCustomEx(string? message  = null) : base(message) { }
+        public string? errorMessageDetails = null;
+        public NotFoundCustomEx(string? errorMessageDetails  = null) : base(errorMessageDetails) { }
     }
 }

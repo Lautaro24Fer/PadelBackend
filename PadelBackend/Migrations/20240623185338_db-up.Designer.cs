@@ -11,7 +11,7 @@ using PadelBackend.Services;
 namespace PadelBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240622040536_db-up")]
+    [Migration("20240623185338_db-up")]
     partial class dbup
     {
         /// <inheritdoc />
@@ -32,8 +32,9 @@ namespace PadelBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -61,18 +62,18 @@ namespace PadelBackend.Migrations
                         new
                         {
                             Id = 1,
-                            Category = 2,
+                            Category = "Diamante",
                             Description = "esta es una descripcion de prueba",
-                            Image = "esta es una url",
+                            Image = "https://imgs.search.brave.com/f-4T_e5tykKzUymoLjwVP7dzRg6pXn08rTfXQckBI-g/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9kMjho/aTkzZ3I2OTdvbC5j/bG91ZGZyb250Lm5l/dC81YTFhNzBlMS02/MzIxLTY5NDQtZWQ5/My02N2E0ODU1MDM1/MDQvaW1nL1Byb2R1/Y3RvLzk3YmZmNWQ3/LWU5NGItYzY4MS1i/NGNjLTI4MDgzN2Ux/NWY2YS9BQUExLTEz/LTY1OWVhZDdkNzRh/YTAuanBn",
                             Name = "Racketa 1",
                             Price = 12.19f
                         },
                         new
                         {
                             Id = 2,
-                            Category = 0,
+                            Category = "Redonda",
                             Description = "esta es una descripcion de prueba 2",
-                            Image = "esta es una url 2",
+                            Image = "https://imgs.search.brave.com/f-4T_e5tykKzUymoLjwVP7dzRg6pXn08rTfXQckBI-g/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9kMjho/aTkzZ3I2OTdvbC5j/bG91ZGZyb250Lm5l/dC81YTFhNzBlMS02/MzIxLTY5NDQtZWQ5/My02N2E0ODU1MDM1/MDQvaW1nL1Byb2R1/Y3RvLzk3YmZmNWQ3/LWU5NGItYzY4MS1i/NGNjLTI4MDgzN2Ux/NWY2YS9BQUExLTEz/LTY1OWVhZDdkNzRh/YTAuanBn",
                             Name = "Racketa 2",
                             Price = 1922.19f
                         });
@@ -113,32 +114,6 @@ namespace PadelBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "lautaro@gmail.com",
-                            Name = "Lautaro Fernandez",
-                            Password = "12345678",
-                            UserName = "lauta"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "lautaro1@gmail.com",
-                            Name = "Lautaro Fernandez",
-                            Password = "12345678",
-                            UserName = "lauta2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "lautaro2@gmail.com",
-                            Name = "Lautaro Fernandez",
-                            Password = "12345678",
-                            UserName = "lauta3"
-                        });
                 });
 #pragma warning restore 612, 618
         }

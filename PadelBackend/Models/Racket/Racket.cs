@@ -3,11 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PadelBackend.Models.Racket
 {
-    public enum RacketCategory
+    public static class RacketCategories
     {
-        Diamante,
-        Lagrima,
-        Redonda
+        public static readonly List<string> categories = new List<string>
+        {
+        "diamante",
+        "lagrima",
+        "redonda"
+        };
     }
     public class Racket
     {
@@ -22,7 +25,7 @@ namespace PadelBackend.Models.Racket
         [MaxLength(20)]
         public float Price { get; set; }
         [Required]
-        public RacketCategory Category { get; set; }
+        public string Category { get; set; } = null!;
         [Required]
         public string Image { get; set; } = null!;
     }
