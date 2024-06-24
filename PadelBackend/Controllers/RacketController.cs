@@ -53,6 +53,7 @@ namespace PadelBackend.Controllers
                 return BadRequest(new {message = ex.Message});
             }
         }
+        // SE BORRA PARA LA V2
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]

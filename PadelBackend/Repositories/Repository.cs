@@ -10,6 +10,7 @@ namespace PadelBackend.Repositories
         public Task<T> GetOne(Expression<Func<T, bool>>? filter = null);
         public Task CreateOne(T entity);
         public Task Save();
+        public Task<T> Update(T entity);
     }
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -51,6 +52,13 @@ namespace PadelBackend.Repositories
         public async Task Save()
         {
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<T> Update(T entity)
+        {
+            dbSet.Update(entity);
+            await Save();
+            return entity;
         }
     }
 }
