@@ -11,9 +11,6 @@ namespace PadelBackend.Services
 
     public interface IRacketServices
     {
-        public Task<RacketDto> CreateRacket(CreateRacketDto createRacket); 
-        public Task DeleteRacket();
-        public Task<RacketDto> UpdateRacket();
         public Task<RacketDto> GetOneRacket(int id);
         public Task<List<RacketsDto>> GetManyRackets();
     }
@@ -29,28 +26,19 @@ namespace PadelBackend.Services
             this.mapper = mapper;
         }
 
-        public async Task<RacketDto> CreateRacket(CreateRacketDto createRacket)
-        {
-            // validacion de la categoria
+        //public async Task<RacketDto> CreateRacket(CreateRacketDto createRacket)
+        //{
+        //    // validacion de la categoria
             
-            if (!RacketCategories.categories.Contains(createRacket.Category.ToLower()))
-            {
-                throw new Exception($"The category '{createRacket.Category}' does not exist");
-            }
-            var racketMapped = mapper.Map<Racket>(createRacket);
-            await racketRepository.CreateOne(racketMapped);
-            return mapper.Map<RacketDto>(racketMapped);
-        }
-        public Task DeleteRacket()
-        {
-            throw new NotImplementedException();
-
-        }
-        public Task<RacketDto> UpdateRacket()
-        {
-            throw new NotImplementedException();
-
-        }
+        //    if (!RacketCategories.categories.Contains(createRacket.Category.ToLower()))
+        //    {
+        //        throw new Exception($"The category '{createRacket.Category}' does not exist");
+        //    }
+        //    var racketMapped = mapper.Map<Racket>(createRacket);
+        //    await racketRepository.CreateOne(racketMapped);
+        //    return mapper.Map<RacketDto>(racketMapped);
+        //}
+        
         public async Task<RacketDto> GetOneRacket(int id)
         {
             var racket = await racketRepository.GetOne(r => r.Id == id);
@@ -61,8 +49,6 @@ namespace PadelBackend.Services
             return mapper.Map<RacketDto>(racket);
             
         }
-
-
         public async Task<List<RacketsDto>> GetManyRackets()
         {
             var rackets = await racketRepository.Get();
