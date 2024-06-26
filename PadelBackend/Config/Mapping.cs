@@ -24,9 +24,6 @@ namespace PadelBackend.Config
             // Racketas
             CreateMap<Racket, RacketDto>().ReverseMap();
             CreateMap<Racket, RacketsDto>().ReverseMap();
-            CreateMap<CreateRacketDto, Racket>().ReverseMap();
-            //update sin nulls
-            CreateMap<UpdateRacketDto, RacketsDto>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
         }
     }
 }

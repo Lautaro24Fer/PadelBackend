@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PadelBackend.Exceptions;
+using PadelBackend.Models.Query.Dto;
 using PadelBackend.Models.Racket.Dto;
 using PadelBackend.Services;
 using System.Net;
@@ -21,11 +22,11 @@ namespace PadelBackend.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<RacketsDto>>> Get()
+        public async Task<ActionResult<List<RacketsDto>>> Get([FromQuery] QueryDto query)
         {
             try
             {
-                var rackets = await racketServices.GetManyRackets();
+                var rackets = await racketServices.GetManyRackets(query);
                 return Ok( new {status = true, requestResponse = rackets, messageDetails = "The request was answered successfully" });
             }
             catch(Exception ex)
