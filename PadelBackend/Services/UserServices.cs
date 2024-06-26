@@ -45,7 +45,6 @@ namespace PadelBackend.Services
             var user = await userRepo.GetOne(u => u.Id == id);
             return mapper.Map<UserDto>(user);
         }
-
         public async Task<UserDto> CreateOneUser(CreateUserDto createUser)
         {
             createUser.UserName = createUser.UserName.Trim();
@@ -69,7 +68,6 @@ namespace PadelBackend.Services
             await userRepo.CreateOne(createUserMapped);
             return mapper.Map<UserDto>(createUserMapped);
         }
-
         public async Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input)
         {
             var userStatus = new LoginValidationDto();

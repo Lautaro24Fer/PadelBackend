@@ -37,8 +37,7 @@ namespace PadelBackend.Services
         }
         public async Task<List<RacketsDto>> GetManyRackets(QueryDto query)
         {
-            Console.WriteLine($"{query}");
-            var rackets = await racketRepository.Get();
+            var rackets = await racketRepository.Get(query);
             return mapper.Map<List<RacketsDto>>(rackets);
         }
     }

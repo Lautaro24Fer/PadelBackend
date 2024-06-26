@@ -82,13 +82,15 @@ namespace PadelBackend.Controllers
         public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UpdateUserDto updateUser)
         {
             var idFromToken = User.FindFirst("id")?.Value;
-            if ((idFromToken == null) || (!int.TryParse(idFromToken, out _)))
+            var idFromTokenIsInt = int.TryParse(idFromToken, out int numberParsed);
+            if ((idFromToken == null) || (!idFromTokenIsInt))
             {
                 return Unauthorized(new {status = false, messageDetails = "Request denegated. Unauthorized"});
             }
-            if(int.Parse(idFromToken) != id)
+            if (numberParsed != id)
             {
-                return Forbid("Can not update data from other user");
+                Console.WriteLine("la id del token no coincide con la del parametro");
+                return Forbid();
             }
             try
             {
