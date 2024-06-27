@@ -1,7 +1,5 @@
 # PadelBackend v2
 
-La version v1 de la actual api contiene los siguientes endpoints 
-
 ### IMPORTANTE
 
 Siempre se hará referencia acerca de la url con "url/..." donde la 'url' puede ser el localhost como la url de producción dependiendo de donde se 
@@ -83,5 +81,4 @@ Tambien podriamos pedirle unicamente la información de una unica raqueta median
 GET
 url/api/racket/:id
 ```
-
 
