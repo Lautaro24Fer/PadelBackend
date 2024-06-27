@@ -20,12 +20,10 @@ namespace PadelBackend.Config
             CreateMap<User, Login>().ReverseMap();
             CreateMap<User, LoginValidationDto>().ReverseMap();
             CreateMap<User, UserValidationDataDto>().ReverseMap();
+            CreateMap<UpdateUserDto, User>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
             // Racketas
             CreateMap<Racket, RacketDto>().ReverseMap();
             CreateMap<Racket, RacketsDto>().ReverseMap();
-            CreateMap<CreateRacketDto, Racket>().ReverseMap();
-            //update sin nulls
-            CreateMap<UpdateRacketDto, RacketsDto>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
         }
     }
 }

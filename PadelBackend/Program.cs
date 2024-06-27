@@ -19,9 +19,9 @@ builder.Services.AddSwaggerGen( options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v1",
-        Title = "ToDo API",
-        Description = "An ASP.NET Core Web API for managing todos",
+        Version = "v2",
+        Title = "PadelPoint API",
+        Description = "An ASP.NET Core Web API for managing users and rackets of padelpoint",
     });
     options.AddSecurityDefinition("Token", new OpenApiSecurityScheme()
     {

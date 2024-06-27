@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PadelBackend.Exceptions;
 using PadelBackend.Models.Auth;
 using PadelBackend.Models.Auth.Dto;
 using PadelBackend.Models.User;
@@ -18,6 +19,8 @@ namespace PadelBackend.Services
         public Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input);
         public Task<LoginValidationDto> ValidateCredentials(Login login);
         public Task<UserDto> CreateOneUser(CreateUserDto createUser);
+
+        public Task<UserDto> UpdateOneUser(UpdateUserDto updateUser, int id);
     }
     public class UserServices : IUsersServices
     {
@@ -42,7 +45,6 @@ namespace PadelBackend.Services
             var user = await userRepo.GetOne(u => u.Id == id);
             return mapper.Map<UserDto>(user);
         }
-
         public async Task<UserDto> CreateOneUser(CreateUserDto createUser)
         {
             createUser.UserName = createUser.UserName.Trim();
@@ -66,7 +68,6 @@ namespace PadelBackend.Services
             await userRepo.CreateOne(createUserMapped);
             return mapper.Map<UserDto>(createUserMapped);
         }
-
         public async Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input)
         {
             var userStatus = new LoginValidationDto();
@@ -141,5 +142,15 @@ namespace PadelBackend.Services
             return Regex.IsMatch(input, usernamePattern);
         }
 
+        public async Task<UserDto> UpdateOneUser(UpdateUserDto updateUser, int id)
+        {
+            var userExists = await userRepo.GetOne(u => u.Id == id);
+            if(userExists == null)
+            {
+                throw new NotFoundCustomEx();
+            }
+            var userUpdated = mapper.Map(updateUser, userExists);
+            return mapper.Map<UserDto>(await userRepo.Update(userUpdated));
+        }
     }
 }

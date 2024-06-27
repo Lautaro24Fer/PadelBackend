@@ -5,16 +5,11 @@ namespace PadelBackend.Models.Racket.Dto
 {
     public class RacketDto
     {
-        [Required]
-        [MaxLength(100)]
-        public string Name { get; set; } = null!;
-        [MaxLength(255)]
-        public string Description { get; set; } = null!;
-        [MaxLength(20)]
+        public int Id { get; set; }
+        public string Model { get; set; } = null!;
+        public string Provider { get; set; } = null!;
         public float Price { get; set; }
-        [Required]
-        public string Category { get; set; } = null!;
-        [Required]
+        public string Brand { get; set; } = null!;
         public string Image { get; set; } = null!;
     }
 }
