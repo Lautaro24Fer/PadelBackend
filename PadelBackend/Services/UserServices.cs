@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PadelBackend.Exceptions;
 using PadelBackend.Models.Auth;
 using PadelBackend.Models.Auth.Dto;
 using PadelBackend.Models.User;
@@ -18,6 +19,8 @@ namespace PadelBackend.Services
         public Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input);
         public Task<LoginValidationDto> ValidateCredentials(Login login);
         public Task<UserDto> CreateOneUser(CreateUserDto createUser);
+
+        public Task<UserDto> UpdateOneUser(UpdateUserDto updateUser, int id);
     }
     public class UserServices : IUsersServices
     {
@@ -42,7 +45,6 @@ namespace PadelBackend.Services
             var user = await userRepo.GetOne(u => u.Id == id);
             return mapper.Map<UserDto>(user);
         }
-
         public async Task<UserDto> CreateOneUser(CreateUserDto createUser)
         {
             createUser.UserName = createUser.UserName.Trim();
@@ -66,7 +68,6 @@ namespace PadelBackend.Services
             await userRepo.CreateOne(createUserMapped);
             return mapper.Map<UserDto>(createUserMapped);
         }
-
         public async Task<LoginValidationDto> GetOneUserByUserNameOrEmail(string input)
         {
             var userStatus = new LoginValidationDto();
@@ -100,7 +101,7 @@ namespace PadelBackend.Services
             if(userByUserName == null)
             {
                 userStatus.Status = false;
-                userStatus.Message = "User by username not founded";
+                userStatus.Message = $"User by username '{input}' not founded";
                 userStatus.User = userByUserName;
                 return userStatus;
             }
@@ -137,9 +138,38 @@ namespace PadelBackend.Services
 
         public bool IsValidUserNameFormat(string input)
         {
+            // Solo tomará nombres de usuario con letras minusculas y mayusculas y numeros. 
+            // El guion bajo (_) es el unico simbolo permitido
+            // El primer caracter debe de ser obligatoriamente una letra
             string usernamePattern = @"^[a-zA-Z][a-zA-Z0-9_]*$";
             return Regex.IsMatch(input, usernamePattern);
         }
 
+        public async Task<UserDto> UpdateOneUser(UpdateUserDto updateUser, int id)
+        {
+            var userExists = await userRepo.GetOne(u => u.Id == id);
+            if(userExists == null)
+            {
+                throw new NotFoundCustomEx();
+            }
+            if(updateUser.Email != null)
+            {
+                var emailInUse = await GetOneUserByUserNameOrEmail(updateUser.Email);
+                if(emailInUse.User != null)
+                {
+                    throw new Exception($"The email '{updateUser.Email}' is currently in use");
+                }
+            }
+            if (updateUser.UserName != null)
+            {
+                var userNameInUse = await GetOneUserByUserNameOrEmail(updateUser.UserName);
+                if (userNameInUse.User != null)
+                {
+                    throw new Exception($"The username '{updateUser.UserName}' is currently in use");
+                }
+            }
+            var userUpdated = mapper.Map(updateUser, userExists);
+            return mapper.Map<UserDto>(await userRepo.Update(userUpdated));
+        }
     }
 }

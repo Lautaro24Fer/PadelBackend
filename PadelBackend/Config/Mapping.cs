@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+
 using PadelBackend.Models.User.Dto;
 using PadelBackend.Models.User;
 using PadelBackend.Models.Auth;
 using PadelBackend.Models.Auth.Dto;
+using PadelBackend.Models.Racket;
+using PadelBackend.Models.Racket.Dto;
 
 namespace PadelBackend.Config
 {
@@ -17,6 +20,10 @@ namespace PadelBackend.Config
             CreateMap<User, Login>().ReverseMap();
             CreateMap<User, LoginValidationDto>().ReverseMap();
             CreateMap<User, UserValidationDataDto>().ReverseMap();
+            CreateMap<UpdateUserDto, User>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
+            // Racketas
+            CreateMap<Racket, RacketDto>().ReverseMap();
+            CreateMap<Racket, RacketsDto>().ReverseMap();
         }
     }
 }

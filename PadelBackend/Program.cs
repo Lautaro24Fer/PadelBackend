@@ -19,9 +19,9 @@ builder.Services.AddSwaggerGen( options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v1",
-        Title = "ToDo API",
-        Description = "An ASP.NET Core Web API for managing todos",
+        Version = "v2",
+        Title = "PadelPoint API",
+        Description = "An ASP.NET Core Web API for managing users and rackets of padelpoint",
     });
     options.AddSecurityDefinition("Token", new OpenApiSecurityScheme()
     {
@@ -59,9 +59,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IUsersServices, UserServices>();
 builder.Services.AddScoped<IEncoderService, EncoderService>();
+builder.Services.AddScoped<IRacketServices, RacketServices>();
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRacketRepository, RacketRepository>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

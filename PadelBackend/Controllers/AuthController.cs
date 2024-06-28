@@ -33,19 +33,19 @@ namespace PadelBackend.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new {status = false, requestResponse = ModelState, messageDetails = "Bad request. ModelState invalid" });
             }
             try
             {
                 var userstate = await usersServices.ValidateCredentials(logindata);
                 if (!userstate.Status)
                 {
-                    return BadRequest(new {message = "Credentials do not match" });
+                    return BadRequest(new { status = false, messageDetails = "Credentials do not match" });
                 }
 
                 var token = authServices.GenerateJwtToken(userstate.User);
 
-                return Ok(new LoginResponseDto
+                return Created("Login", new LoginResponseDto
                 {
                     Token = token,
                     User = mapper.Map<UserLoginResponseDto>(userstate.User)
@@ -54,7 +54,7 @@ namespace PadelBackend.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest(new {message = ex.Message});
+                return BadRequest(new { status = false, messageDetails = ex.Message});
             }
             
         }
