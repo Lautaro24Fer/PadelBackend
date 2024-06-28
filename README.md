@@ -8,10 +8,11 @@ Siempre se hará referencia acerca de la url con "url/..." donde la 'url' puede 
 
 Los usuarios podrán iniciar sesión ingresando el nombre de usuario o correo electrónico junto con la contraseña de la cuenta al siguiente endpoint
 
+Cabe destacar la contraseña tendrá un tamaño minimo de 8 caracteres y el nombre de usuario contendrá solamente letras, numeros y guiones bajos empezando siempre por una letra.
+
 ```bash
 POST
 url/api/auth
-
 ```
 
 Se le retornará un bearer token que deberá usar en los encabezados de las peticiones para poder hacer las consultas que requiram una autorizacion previa
