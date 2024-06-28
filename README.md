@@ -2,7 +2,7 @@
 
 ### IMPORTANTE
 
-Siempre se hará referencia acerca de la url con "url/..." donde la 'url' puede ser el localhost como la url de producción dependiendo de donde se 
+Siempre se hará referencia acerca de la url con "url/..." donde la 'url' puede ser el localhost como la url de producción dependiendo de donde se encuentre la aplicacion
 
 ### AUTH
 
@@ -33,21 +33,18 @@ url/api/user
 }
 ```
 
-Una vez autenticados se podrá consultar acerca de la informacion de los usuarios en los siguientes endpoints
+También podrá cambiar los datos de su perfil realizando una peticion PUT al mismo url con los datos que quiere cambiar. Por ejemplo, si quisiera cambiar de nombre de usuario lo haria de la siguiente manera
 
 ```bash
-GET
+PUT
 url/api/user
 
+{
+  "name": "string"
+}
 ```
-En donde mostrará un json de todos los usuarios cargados
 
-```bash
-GET
-url/api/user/:id
-
-```
-En donde mostrará todos los detalles de un usuario determinado por su id
+El sistema extraerá del token de la request el usuario que desea cambiar sus credenciales y las actualizará automaticamente sin necesidad de enviar una id como prop
 
 ### RACKETS
 
