@@ -45,7 +45,7 @@ namespace PadelBackend.Controllers
 
                 var token = authServices.GenerateJwtToken(userstate.User);
 
-                return Ok(new LoginResponseDto
+                return Created("Login", new LoginResponseDto
                 {
                     Token = token,
                     User = mapper.Map<UserLoginResponseDto>(userstate.User)

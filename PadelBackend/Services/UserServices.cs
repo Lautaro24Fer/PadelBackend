@@ -101,7 +101,7 @@ namespace PadelBackend.Services
             if(userByUserName == null)
             {
                 userStatus.Status = false;
-                userStatus.Message = "User by username not founded";
+                userStatus.Message = $"User by username '{input}' not founded";
                 userStatus.User = userByUserName;
                 return userStatus;
             }
@@ -138,6 +138,9 @@ namespace PadelBackend.Services
 
         public bool IsValidUserNameFormat(string input)
         {
+            // Solo tomará nombres de usuario con letras minusculas y mayusculas y numeros. 
+            // El guion bajo (_) es el unico simbolo permitido
+            // El primer caracter debe de ser obligatoriamente una letra
             string usernamePattern = @"^[a-zA-Z][a-zA-Z0-9_]*$";
             return Regex.IsMatch(input, usernamePattern);
         }
@@ -148,6 +151,22 @@ namespace PadelBackend.Services
             if(userExists == null)
             {
                 throw new NotFoundCustomEx();
+            }
+            if(updateUser.Email != null)
+            {
+                var emailInUse = await GetOneUserByUserNameOrEmail(updateUser.Email);
+                if(emailInUse.User != null)
+                {
+                    throw new Exception($"The email '{updateUser.Email}' is currently in use");
+                }
+            }
+            if (updateUser.UserName != null)
+            {
+                var userNameInUse = await GetOneUserByUserNameOrEmail(updateUser.UserName);
+                if (userNameInUse.User != null)
+                {
+                    throw new Exception($"The username '{updateUser.UserName}' is currently in use");
+                }
             }
             var userUpdated = mapper.Map(updateUser, userExists);
             return mapper.Map<UserDto>(await userRepo.Update(userUpdated));

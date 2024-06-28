@@ -54,26 +54,5 @@ namespace PadelBackend.Controllers
                 return BadRequest(new {status = false, messageDetails = ex.Message});
             }
         }
-        // SE BORRA PARA LA V2
-        //[HttpPost]
-        //[Authorize]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public async Task<ActionResult<RacketDto>> Post(CreateRacketDto createRacket)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    try
-        //    {
-        //        var createResponse = await racketServices.CreateRacket(createRacket);
-        //        return Ok(new { body = createResponse, wasCreated = true });
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(new { errorMessage = ex.Message, wasCreated = false});
-        //    }
-        //}
     }
 }
